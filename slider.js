@@ -11,8 +11,8 @@ class Slider {
         imgList.setAttribute("id", "image-list");
         this.wrapper.appendChild(imgList);
         this.pictures.map((item, index) => {
-            let itemImg =  `<li class="image-item ${index === 0 ? 'active' : '' }" data-index= ${index}>
-                       <img class="slide-img" src= ${item} alt="image">
+            let itemImg =  `<li class="image-item${index === 0 ? ' active' : ''}" data-index="${index}">
+                       <img class="slide-img" src="${item}" alt="image">
                        </li>`;
 
             imgList.innerHTML += itemImg;
