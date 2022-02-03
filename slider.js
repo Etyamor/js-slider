@@ -16,30 +16,30 @@ function renderSlides (pictures) {
     wrapper.appendChild(imgList);
 
     pictures.map((item, index) => {
-       let itemImg =  `<li class="image-item" data-index= ${index} style= "display: ${index === 0 ? 'block' : 'none' }">
+       let itemImg =  `<li class="image-item ${index === 0 ? 'active' : '' }" data-index= ${index}>
                        <img class="slide-img" src= ${item} alt="image">
                        </li>`;
 
          imgList.innerHTML += itemImg;
     });
 
-
-    createButton(["right-btn", "fas", "fa-chevron-right"]);
-    createButton(["left-btn", "fas", "fa-chevron-left"]);
+    wrapButtons();
 }
 
-
+function wrapButtons () {
+    const buttonWrapper = document.createElement("div");
+    buttonWrapper.classList.add("button-wrapper");
+    buttonWrapper.append(createButton(["btn", "left-btn", "fas", "fa-chevron-left"]));
+    buttonWrapper.append(createButton(["btn", "right-btn", "fas", "fa-chevron-right"]));
+    wrapper.append(buttonWrapper);
+}
 
 function createButton (btnClass) {
     const button = document.createElement("button");
-    const buttonWrapper = document.createElement("div");
     const icon = document.createElement("i");
-
     button.classList.add(...btnClass);
     button.appendChild(icon);
-    buttonWrapper.classList.add("button-wrapper");
-    buttonWrapper.append(button);
-    wrapper.append(buttonWrapper);
+    return button;
 }
 
 
@@ -56,18 +56,13 @@ function switchSlides() {
         positionInd = maxLength;
     }
 
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = 'none';
-    }
-    slides[positionInd -1].style.display = 'block';
+    const currSlide = document.getElementsByClassName("image-item active");
+    currSlide[0].classList.remove('active');
+    slides[positionInd -1].classList.add('active');
 }
 
-document.querySelector( ".right-btn").addEventListener("click", function () {
-    switchSlides(positionInd++)
-});
-document.querySelector(".left-btn").addEventListener("click", function (){
-    switchSlides(positionInd--)
-});
+document.querySelector( ".right-btn").addEventListener("click", () => switchSlides(positionInd++));
+document.querySelector( ".left-btn").addEventListener("click", () => switchSlides(positionInd--));
 
 
 
