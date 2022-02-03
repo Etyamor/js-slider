@@ -1,3 +1,58 @@
+class Slider {
+    constructor(wrapper, pictures) {
+        this.wrapper = wrapper;
+        this.pictures = pictures;
+        this.positionInd = 1;
+        this.#renderSlides();
+    }
+    #renderSlides() {
+        const imgList = document.createElement('ul');
+        imgList.classList.add("image-list")
+        imgList.setAttribute("id", "image-list");
+        this.wrapper.appendChild(imgList);
+        this.pictures.map((item, index) => {
+            let itemImg =  `<li class="image-item ${index === 0 ? 'active' : '' }" data-index= ${index}>
+                       <img class="slide-img" src= ${item} alt="image">
+                       </li>`;
+
+            imgList.innerHTML += itemImg;
+        });
+        return this;
+    }
+    makeButtons() {
+        const buttonWrapper = document.createElement("div");
+        buttonWrapper.classList.add("button-wrapper");
+        buttonWrapper.append(this.#createButton(["btn", "left-btn", "fas", "fa-chevron-left"]));
+        buttonWrapper.append(this.#createButton(["btn", "right-btn", "fas", "fa-chevron-right"]));
+        this.wrapper.append(buttonWrapper);
+        this.wrapper.querySelector(".right-btn").addEventListener("click", () => this.switchSlides(this.positionInd++));
+        this.wrapper.querySelector(".left-btn").addEventListener("click", () => this.switchSlides(this.positionInd--));
+        return this;
+    }
+    makeDots() {
+        return this;
+    }
+    #createButton(btnClasses) {
+        const button = document.createElement("button");
+        const icon = document.createElement("i");
+        button.classList.add(...btnClasses);
+        button.appendChild(icon);
+        return button;
+    }
+    switchSlides() {
+        const slides = this.wrapper.getElementsByClassName("image-item");
+        const maxLength = slides.length;
+        if (this.positionInd > maxLength) {
+            this.positionInd = 1;
+        } else if (this.positionInd < 1) {
+            this.positionInd = maxLength;
+        }
+        const currSlide = this.wrapper.getElementsByClassName("image-item active");
+        currSlide[0].classList.remove('active');
+        slides[this.positionInd -1].classList.add('active');
+    }
+}
+
 const pictures = [
     'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825_1280.jpg',
     'https://cdn.pixabay.com/photo/2019/05/14/22/05/container-4203677_1280.jpg',
@@ -7,65 +62,9 @@ const pictures = [
 ];
 
 const wrapper = document.getElementById("container");
-renderSlides(pictures);
+const firstSlider = new Slider(wrapper, pictures);
+firstSlider.makeButtons();
 
-function renderSlides (pictures) {
-    const imgList = document.createElement('ul');
-    imgList.classList.add("image-list")
-    imgList.setAttribute("id", "image-list");
-    wrapper.appendChild(imgList);
-
-    pictures.map((item, index) => {
-       let itemImg =  `<li class="image-item ${index === 0 ? 'active' : '' }" data-index= ${index}>
-                       <img class="slide-img" src= ${item} alt="image">
-                       </li>`;
-
-         imgList.innerHTML += itemImg;
-    });
-
-    wrapButtons();
-}
-
-function wrapButtons () {
-    const buttonWrapper = document.createElement("div");
-    buttonWrapper.classList.add("button-wrapper");
-    buttonWrapper.append(createButton(["btn", "left-btn", "fas", "fa-chevron-left"]));
-    buttonWrapper.append(createButton(["btn", "right-btn", "fas", "fa-chevron-right"]));
-    wrapper.append(buttonWrapper);
-}
-
-function createButton (btnClass) {
-    const button = document.createElement("button");
-    const icon = document.createElement("i");
-    button.classList.add(...btnClass);
-    button.appendChild(icon);
-    return button;
-}
-
-
- let positionInd = 1;
-
-
-function switchSlides() {
-    const slides = document.getElementsByClassName("image-item");
-    const maxLength = slides.length;
-
-    if (positionInd > maxLength) {
-        positionInd = 1;
-    } else if (positionInd < 1) {
-        positionInd = maxLength;
-    }
-
-    const currSlide = document.getElementsByClassName("image-item active");
-    currSlide[0].classList.remove('active');
-    slides[positionInd -1].classList.add('active');
-}
-
-document.querySelector( ".right-btn").addEventListener("click", () => switchSlides(positionInd++));
-document.querySelector( ".left-btn").addEventListener("click", () => switchSlides(positionInd--));
-
-
-
-
-
-
+const wrapper1 = document.getElementById("container1");
+const secondSlider = new Slider(wrapper1, pictures);
+secondSlider.makeButtons();

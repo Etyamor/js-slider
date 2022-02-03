@@ -20,7 +20,7 @@ html {
     font-weight: 400;
 }
 
-#container {
+.container {
     max-width: 600px;
     max-height: 500px;
     display: flex;
