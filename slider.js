@@ -2,7 +2,7 @@ class Slider {
     constructor(wrapper, pictures) {
         this.wrapper = wrapper;
         this.pictures = pictures;
-        this.positionInd = 1;
+        this.positionInd = 0;
         this.#renderSlides();
     }
     #renderSlides() {
@@ -25,8 +25,8 @@ class Slider {
         buttonWrapper.append(this.#createButton(["btn", "left-btn", "fas", "fa-chevron-left"]));
         buttonWrapper.append(this.#createButton(["btn", "right-btn", "fas", "fa-chevron-right"]));
         this.wrapper.append(buttonWrapper);
-        this.wrapper.querySelector(".right-btn").addEventListener("click", () => this.switchSlides(this.positionInd++));
-        this.wrapper.querySelector(".left-btn").addEventListener("click", () => this.switchSlides(this.positionInd--));
+        this.wrapper.querySelector(".right-btn").addEventListener("click", () => {this.positionInd++; this.moveToSlide(this.positionInd)});
+        this.wrapper.querySelector(".left-btn").addEventListener("click", () => {this.positionInd--; this.moveToSlide(this.positionInd)});
         return this;
     }
     makeDots() {
@@ -39,17 +39,18 @@ class Slider {
         button.appendChild(icon);
         return button;
     }
-    switchSlides() {
+    moveToSlide(index) {
         const slides = this.wrapper.getElementsByClassName("image-item");
         const maxLength = slides.length;
-        if (this.positionInd > maxLength) {
-            this.positionInd = 1;
-        } else if (this.positionInd < 1) {
-            this.positionInd = maxLength;
+        if (index > maxLength - 1) {
+            index = 0;
+        } else if (index < 0) {
+            index = maxLength - 1;
         }
+        this.positionInd = index;
         const currSlide = this.wrapper.getElementsByClassName("image-item active");
         currSlide[0].classList.remove('active');
-        slides[this.positionInd -1].classList.add('active');
+        slides[this.positionInd].classList.add('active');
     }
 }
 
@@ -63,7 +64,7 @@ const pictures = [
 
 const wrapper = document.getElementById("container");
 const firstSlider = new Slider(wrapper, pictures);
-firstSlider.makeButtons();
+firstSlider.makeButtons().moveToSlide(2);
 
 const wrapper1 = document.getElementById("container1");
 const secondSlider = new Slider(wrapper1, pictures);
